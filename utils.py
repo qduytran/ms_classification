@@ -1,6 +1,8 @@
 import os
+import scipy.io
 import pandas as pd
-from fooof_algorithm import fooof_tool
+import numpy as np
+from fooof_algorithm import fooof_tool, fooof_tool_from_mat_file
 from welch import welch_method
 
 def create_label(folder_paths):
@@ -28,18 +30,9 @@ def read_data(folder_paths):
     return set_files
 
 def create_data(set_files):
-    columns = []
     frequencies = []
     psd = []
     new_rows = []
-    for i in range(19):
-        columns.extend([
-            f'ch{i+1}_peak_cf',
-            f'ch{i+1}_peak_pw',
-            f'ch{i+1}_peak_bw',
-            f'ch{i+1}_aperiodic_offset',
-            f'ch{i+1}_aperiodic_exponent'
-        ])
 
     for set_file in set_files:
         frequencies, psd = welch_method(set_file)
@@ -48,3 +41,27 @@ def create_data(set_files):
             new_rows.append(features)
     df_X = pd.DataFrame(new_rows)
     return df_X
+
+def create_features_from_mat_data(mat_path):
+    eeg_data = scipy.io.loadmat(mat_path)
+    psdG = eeg_data['msEEG_1'][0]
+    frequencies = []
+    psd = []
+    label = []
+    new_rows = []
+    for patience in psdG:
+        frequencies.append(patience[8])
+        psd.append(patience[9])
+        label.append(patience[11])
+    frequencies = np.array(frequencies)
+    psd = np.array(psd)
+    label = np.array(label)
+    label = np.squeeze(label)
+    for i in range(307): #307 benh nhan
+        features = fooof_tool_from_mat_file(frequencies[i], psd[i])
+        if len(features) == 95: #chua loc dien cuc tham chieu nen co 21*5 features
+            new_rows.append(features)
+    df_X = pd.DataFrame(new_rows)
+    df_Y = pd.DataFrame(label)
+    return df_X, df_Y
+    
