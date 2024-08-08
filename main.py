@@ -5,15 +5,15 @@ import pickle
 from classify_lr import train, split_data, test, draw_roc_curve
 folder_paths = ['data_new\\CN', 'data_new\\AD', 'data_new\\FTD']
 
-#df_X, df_Y = create_features_from_mat_data("psdGroup")
+#df_X, df_Y = create_features_from_mat_data("mat_data\\psdGroup")
 
 #set_files, df_Y = create_label(folder_paths)
 #df_X = create_data(set_files) 
 #df_X.to_csv('X-88.csv', header=False, index=False)
 #df_Y.to_csv('Y-88.csv', header=False, index=False)
 
-df_X = pd.read_csv("X-88.csv")
-df_Y = pd.read_csv("Y-88.csv")
+df_X = pd.read_csv("csv_data\\X-88.csv")
+df_Y = pd.read_csv("csv_data\\Y-88.csv")
 
 df_X = df_X.iloc[:-23]
 df_Y = df_Y.iloc[:-23]
