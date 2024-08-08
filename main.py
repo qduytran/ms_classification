@@ -1,18 +1,30 @@
 import pandas as pd
 import pickle  
-from utils import create_label, create_data, create_features_from_mat_data
-from train import train, split_data, test, draw_roc_curve
-#folder_paths = ['data\\decreased_cognition', 'data\\intact_cognition']
+#from utils import create_label, create_data, create_features_from_mat_data
+#from classify_rf import train, split_data, test, draw_roc_curve
+from classify_lr import train, split_data, test, draw_roc_curve
+folder_paths = ['data_new\\CN', 'data_new\\AD', 'data_new\\FTD']
 
-#df_X, df_Y = create_features_from_mat_data("msEEG_1")
+#df_X, df_Y = create_features_from_mat_data("psdGroup")
 
 #set_files, df_Y = create_label(folder_paths)
 #df_X = create_data(set_files) 
-#df_X.to_csv('X-test.csv', header=False, index=False)
-#df_Y.to_csv('Y-test.csv', header=False, index=False)
+#df_X.to_csv('X-88.csv', header=False, index=False)
+#df_Y.to_csv('Y-88.csv', header=False, index=False)
 
-df_X = pd.read_csv("X.csv")
-df_Y = pd.read_csv("Y.csv")
+df_X = pd.read_csv("X-88.csv")
+df_Y = pd.read_csv("Y-88.csv")
+
+df_X = df_X.iloc[:-23]
+df_Y = df_Y.iloc[:-23]
+
+#df_X.drop(df_X.index[56:96], inplace=True)
+#df_Y.drop(df_Y.index[56:96], inplace=True)
+#df_Y.iloc[-51:] = 0
+
+#df_X =  df_X.iloc[55:]
+#df_Y =  df_Y.iloc[55:]
+#df_Y.iloc[-51:] = 1
 
 #feature selection
 columns_to_drop = []

@@ -10,8 +10,10 @@ def create_label(folder_paths):
     data = []
     set_files = read_data(folder_paths)
     for file_path in set_files:
-        if 'data\\decreased_cognition' in file_path:
+        if 'data_new\\AD' in file_path:
             label = 1
+        elif 'data_new\\FTD' in file_path:
+            label = 2
         else:
             label = 0
         data.append([file_path, label])
@@ -44,24 +46,23 @@ def create_data(set_files):
 
 def create_features_from_mat_data(mat_path):
     eeg_data = scipy.io.loadmat(mat_path)
-    psdG = eeg_data['msEEG_1'][0]
+    psdG = eeg_data['psdG'][0]
     frequencies = []
     psd = []
     label = []
     new_rows = []
     for patience in psdG:
-        frequencies.append(patience[8])
-        psd.append(patience[9])
-        label.append(patience[11])
+        frequencies.append(patience[2])
+        psd.append(patience[3])
+        label.append(patience[4])
     frequencies = np.array(frequencies)
     psd = np.array(psd)
     label = np.array(label)
     label = np.squeeze(label)
-    for i in range(307): #307 benh nhan
+    for i in range(146): #146 benh nhan
         features = fooof_tool_from_mat_file(frequencies[i], psd[i])
-        if len(features) == 95: #chua loc dien cuc tham chieu nen co 21*5 features
+        if len(features) == 95: 
             new_rows.append(features)
     df_X = pd.DataFrame(new_rows)
     df_Y = pd.DataFrame(label)
     return df_X, df_Y
-    
